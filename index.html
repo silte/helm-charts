@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Helm Charts Repository</title>
+    <style>
+      body {
+        background-color: #121212;
+        color: #ffffff;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        padding: 20px;
+      }
+      .content-wrapper {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      h1 {
+        color: #bb86fc;
+      }
+      h2 {
+        color: #bb86fc;
+      }
+      p {
+        line-height: 1.6;
+      }
+      code {
+        background-color: #333333;
+        padding: 2px 4px;
+        border-radius: 4px;
+      }
+      pre {
+        background-color: #333333;
+        padding: 10px;
+        border-radius: 4px;
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="content-wrapper">
+        <h1>Helm Charts Repository</h1>
+        <p>
+          This repository hosts a collection of
+          <a href="https://helm.sh" style="color: #bb86fc">Helm</a> charts for
+          various applications. Helm is a package manager for Kubernetes, and
+          these charts provide a way to deploy configurable, out-of-the-box
+          applications onto a Kubernetes cluster.
+        </p>
+        <p>
+          The charts in this repository are maintained and versioned using
+          GitHub Actions, which automatically packages and releases updated
+          charts.
+        </p>
+        <p>
+          Please refer to the individual sections below for information on how
+          to use, debug, and release the charts.
+        </p>
+
+        <h2>Table of Contents</h2>
+        <ul>
+          <li><a href="#usage" style="color: #bb86fc">Usage</a></li>
+          <ul>
+            <li>
+              <a href="#nodejs-chart-example" style="color: #bb86fc"
+                >Nodejs Chart example</a
+              >
+            </li>
+            <ul>
+              <li>
+                <a href="#installing-the-chart" style="color: #bb86fc"
+                  >Installing the Chart</a
+                >
+              </li>
+              <li>
+                <a href="#uninstalling-the-chart" style="color: #bb86fc"
+                  >Uninstalling the Chart</a
+                >
+              </li>
+            </ul>
+          </ul>
+          <li>
+            <a href="#debugging-charts-locally" style="color: #bb86fc"
+              >Debugging Charts Locally</a
+            >
+          </li>
+          <ul>
+            <li><a href="#example" style="color: #bb86fc">Example</a></li>
+          </ul>
+          <li>
+            <a href="#release-process" style="color: #bb86fc"
+              >Release Process</a
+            >
+          </li>
+        </ul>
+
+        <h2 id="usage">Usage</h2>
+        <p>
+          <a href="https://helm.sh" style="color: #bb86fc">Helm</a> must be
+          installed to use the charts. Please refer to Helm's
+          <a href="https://helm.sh/docs" style="color: #bb86fc"
+            >documentation</a
+          >
+          to get started.
+        </p>
+        <p>Once Helm has been set up correctly, add the repo as follows:</p>
+        <pre><code>helm repo add silte https://charts.silte.fi</code></pre>
+        <p>
+          If you had already added this repo earlier, run
+          <code>helm repo update</code> to retrieve the latest versions of the
+          packages. You can then run <code>helm search repo silte</code> to see
+          the charts.
+        </p>
+
+        <h3 id="nodejs-chart-example">Nodejs Chart example</h3>
+        <h4 id="installing-the-chart">Installing the Chart</h4>
+        <pre><code>helm install my-nodejs silte/nodejs</code></pre>
+        <h4 id="uninstalling-the-chart">Uninstalling the Chart</h4>
+        <pre><code>helm delete my-nodejs</code></pre>
+      </div>
+    </div>
+  </body>
+</html>
