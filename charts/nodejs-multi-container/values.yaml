@@ -1,0 +1,117 @@
+# name: change-me
+# namespace: change-me
+type: NodePort
+
+image:
+  registry: ghcr.io/silte
+  # repository: change-me
+  tag: latest
+  # command: Override default defined by container
+
+ingress:
+  enabled: true
+  # host: change-me
+  # Path is string or list of strings
+  # path: change-me
+  blockedPaths: []
+  port: 3000
+
+# Node environment for the process.
+nodeEnv: production
+
+# Cloud environment for the process.
+cloudEnv: production
+
+# Log level for the logger.
+logLevel: warn
+noColor: true
+
+replicaCount: 1
+
+k8sProbes:
+  liveness:
+    timeoutSeconds: 4
+    periodSeconds: 5
+    successThreshold: 1
+    failureThreshold: 5
+
+  readiness:
+    timeoutSeconds: 4
+    periodSeconds: 5
+    successThreshold: 1
+    failureThreshold: 2
+
+  startup:
+    initialDelaySeconds: 2
+    timeoutSeconds: 4
+    periodSeconds: 5
+    successThreshold: 1
+    failureThreshold: 10
+
+containers:
+  []
+  # - name: Application
+  #   image:
+  #     registry: override default defined in the root
+  #     repository: override default defined in the root
+  #     tag: override default defined in the root
+  #     command: override default defined in the root
+
+  #   healthCheck:
+  #     path: /healthz
+
+  #   ingress:
+  #     path: defaults to ingress.path
+  #     port: defaults to ingress.port
+
+  #   logLevel: override default defined in the root
+  #   noColor: override default defined in the root
+  #   nodeEnv: override default defined in the root
+  #   cloudEnv: override default defined in the root
+
+  #   # Read more about probes at https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
+  #   k8sProbes:
+  #     liveness:
+  #       # Defaults to `$container.healthCheck.path`
+  #       path: /api/health/live
+  #       timeoutSeconds: override default defined k8sProbes.startup.timeoutSeconds
+  #       periodSeconds: override default defined k8sProbes.startup.periodSeconds
+  #       successThreshold: override default defined k8sProbes.startup.successThreshold
+  #       failureThreshold: override default defined k8sProbes.startup.failureThreshold
+
+  #     readiness:
+  #       # Defaults to `$container.healthCheck.path`
+  #       path: /api/health/ready
+  #       timeoutSeconds: override default defined k8sProbes.startup.timeoutSeconds
+  #       periodSeconds: override default defined k8sProbes.startup.periodSeconds
+  #       successThreshold: override default defined k8sProbes.startup.successThreshold
+  #       failureThreshold: override default defined k8sProbes.startup.failureThreshold
+
+  #     startup:
+  #       # Defaults to `$container.healthCheck.path`
+  #       path: /api/health/started
+  #       initialDelaySeconds: override default defined k8sProbes.startup.initialDelaySeconds
+  #       timeoutSeconds: override default defined k8sProbes.startup.timeoutSeconds
+  #       periodSeconds: override default defined k8sProbes.startup.periodSeconds
+  #       successThreshold: override default defined k8sProbes.startup.successThreshold
+  #       failureThreshold: override default defined k8sProbes.startup.failureThreshold
+
+  #   resources:
+  #     requests:
+  #       memory: 64Mi
+  #       cpu: 250m
+  #     limits:
+  #       memory: 128Mi
+  #       cpu: 500m
+
+  #     # Custom container related variables
+  #     env: {}
+
+  #     # List of secrets names to be mapped container
+  #     secrets: []
+
+# Custom app related variables
+env: {}
+
+# List of secrets names to be mapped to all containers
+secrets: []

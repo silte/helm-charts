@@ -1,0 +1,41 @@
+{{- $app := printf "%s" .Values.name }}
+{{- $namespace := printf "%s" .Values.namespace }}
+
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: {{ $namespace }}
+  name: {{ $app }}
+  labels:
+    app: {{ $app }}
+spec:
+  ports:
+{{- $allPorts := list }}
+{{- range $index, $container := .Values.containers }}
+{{- $containerName := printf "%s" $container.name }}
+
+{{- $ingress := $container.ingress | default (dict) }}
+{{- $port :=  $ingress.port | default .Values.ingress.port }}
+{{- $allPorts = append $allPorts $port }}
+
+    - port: {{ $port }}
+      targetPort: {{ $port }}
+      name: {{ $containerName }}
+{{ end }}
+
+{{- /* Find an empty port that is not in the list */}}
+{{- $emptyPort := 30000 }}
+{{- $portFound := false }}
+{{- while (not $portFound) }}
+  {{- if not (has $emptyPort $allPorts) }}
+    {{- $portFound = true }}
+  {{- else }}
+    {{- $emptyPort = add1 $emptyPort }}
+  {{- end }}
+{{- end }}
+
+    - port: {{ $emptyPort }}
+      targetPort: {{ $emptyPort }}
+      name: empty
+  selector:
+    app: {{ $app }}

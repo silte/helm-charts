@@ -1,0 +1,70 @@
+{{- if .Values.ingress.enabled }}
+
+{{- $app := printf "%s" .Values.name }}
+{{- $namespace := printf "%s" .Values.namespace }}
+{{- $host :=  .Values.ingress.host }}
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $app }}
+  namespace: {{ $namespace }}
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+spec:
+  rules:
+
+{{- $allPorts := list }}
+{{- range $index, $container := .Values.containers }}
+{{- $containerName := printf "%s" $container.name }}
+
+{{- $ingress := $container.ingress | default (dict) }}
+{{- $paths :=  $ingress.path | default .Values.ingress.path }}
+{{- $port :=  $ingress.port | default .Values.ingress.port }}
+
+{{- $allPorts = append $allPorts $port }}
+
+{{- /* Normalize paths to be array of strings */}}
+{{- if kindIs "string" $paths }}
+  {{- $paths = list $paths -}}
+{{- end}}
+
+{{- range $pathIndex, $path := $paths }}
+    - host: {{ $host }}
+      http:
+        paths:
+          - path: {{ $path }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $app }}
+                port:
+                  number: {{ $port }}
+{{ end }}
+{{ end }}
+
+{{- /* Find an empty port that is not in the list */}}
+{{- $emptyPort := 30000 }}
+{{- $portFound := false }}
+{{- while (not $portFound) }}
+  {{- if not (has $emptyPort $allPorts) }}
+    {{- $portFound = true }}
+  {{- else }}
+    {{- $emptyPort = add1 $emptyPort }}
+  {{- end }}
+{{- end }}
+
+{{- range $index, $path := .Values.ingress.blockedPaths }}
+    - host: {{ $host }}
+      http:
+        paths:
+          - path: {{ $path }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $app }}
+                port:
+                  number: {{ $emptyPort }}
+{{ end }}
+{{- end }}

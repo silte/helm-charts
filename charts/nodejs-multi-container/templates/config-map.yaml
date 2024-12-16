@@ -1,0 +1,89 @@
+{{- /* Converts a string from camelCase to snake_case */}}
+
+{{- define "camelCaseToSnakeCase" }}
+{{- $input := . -}}
+{{- $input = regexReplaceAll "([a-z])([0-9])" $input "${1}_${2}" -}}
+{{- $input = regexReplaceAll "([0-9])([A-Z])" $input "${1}_${2}" -}}
+{{- regexReplaceAll "([a-z0-9])([A-Z])" $input "${1}_${2}" | upper -}}
+{{- end -}}
+
+{{- /* Converts a string from kebab-case to snake_case */}}
+
+{{- define "kebabCaseToSnakeCase" }}
+{{- $input := . -}}
+{{- regexReplaceAll "([a-zA-Z0-9])-([a-zA-Z0-9])" $input "${1}_${2}" | lower -}}
+{{- end -}}
+
+{{- /* Converts a map from camelCase to snake_case */}}
+{{- /* e.g. {"foo": {"barBaz": "123"}} -> "FOO_BAR_BAZ":"123  */}}
+
+{{- define "nestedCaseConvertor" -}}
+{{- $parentKey := .parentKey -}}
+{{- $value := .value -}}
+{{- if kindIs "map" $value -}}
+  {{- range $key, $val := $value -}}
+    {{- $newParentKey := "" -}}
+    {{- if $parentKey -}}
+      {{- $newParentKey = print $parentKey "_" (include "kebabCaseToSnakeCase" (include "camelCaseToSnakeCase" $key)) -}}
+    {{- else -}}
+      {{- $newParentKey = include "kebabCaseToSnakeCase" (include "camelCaseToSnakeCase" $key) -}}
+    {{- end -}}
+    {{- include "nestedCaseConvertor" (dict "parentKey" $newParentKey "value" $val) -}}
+  {{- end -}}
+{{- else -}}
+  {{- println " " ((include "kebabCaseToSnakeCase" (include "camelCaseToSnakeCase" $parentKey)) | upper) ": " ($value | quote) -}}
+{{- end -}}
+{{- end -}}
+
+{{- $app := printf "%s" .Values.name }}
+{{- $namespace := printf "%s" .Values.namespace }}
+
+{{- $defaultPort := printf "%s" .Values.ingress.port }}
+{{- $defaultNodeEnv := printf "%s" .Values.nodeEnv }}
+{{- $defaultCloudEnv := printf "%s" .Values.cloudEnv }}
+{{- $defaultLogLevel := printf "%s" .Values.logLevel }}
+{{- $defaultNoColor := printf "%s" .Values.noColor }}
+
+
+
+{{- /* Shared env for all containers */}}
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $app }}-config
+  namespace: {{ $app }}
+  labels:
+    app: {{ $app }}
+data:
+{{- range $key, $value := .Values.env }}
+  {{- include "nestedCaseConvertor" (dict "parentKey" $key "value" $value) -}}
+{{- end }}
+
+---
+
+{{- /* Container specific env */}}
+{{- range $index, $container := .Values.containers }}
+{{- $containerName := printf "%s" $container.name }}
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $app }}-config-{{ $containerName }}
+  namespace: {{ $namespace }}
+  labels:
+    app: {{ $app }}
+    container: {{ $containerName }}
+data:
+  NODE_ENV: {{ default $defaultNodeEnv $container.nodeEnv | quote }}
+  CLOUD_ENV: {{ default $defaultCloudEnv $container.cloudEnv | quote }}
+  PORT: {{ default $defaultPort $container.ingress.port | quote }}
+  LOG_LEVEL: {{ default $defaultLogLevel $container.logLevel | quote }}
+  NO_COLOR: {{ default $defaultNoColor $container.noColor | quote }}
+
+{{ "  \n" }}
+{{- range $key, $value := $container.env }}
+  {{- include "nestedCaseConvertor" (dict "parentKey" $key "value" $value) -}}
+{{- end }}
+---
+{{- end }}
