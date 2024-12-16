@@ -1,0 +1,53 @@
+{{- if .Values.ingress.enabled }}
+
+{{- $app := printf "%s" .Values.name }}
+{{- $namespace := printf "%s" .Values.namespace }}
+
+{{- $host :=  .Values.ingress.host }}
+{{- $port :=  .Values.ingress.port }}
+{{- $paths := .Values.ingress.path }}
+
+{{- /* Normalize paths to be array of strings */}}
+{{- if kindIs "string" $paths }}
+  {{- $paths = list $paths -}}
+{{- end}}
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $app }}
+  namespace: {{ $namespace }}
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+spec:
+  rules:
+{{- range $index, $path := $paths }}
+    - host: {{ $host }}
+      http:
+        paths:
+          - path: {{ $path }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $app }}
+                port:
+                  number: {{ $port }}
+{{ end }}
+
+{{- /* Define empty port */}}
+{{- $emptyPort = add1 $port }}
+
+{{- range $index, $path := .Values.ingress.blockedPaths }}
+    - host: {{ $host }}
+      http:
+        paths:
+          - path: {{ $path }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $app }}
+                port:
+                  number: {{ $emptyPort }}
+{{ end }}
+{{- end }}

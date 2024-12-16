@@ -1,0 +1,27 @@
+{{- $app := printf "%s" .Values.name }}
+{{- $namespace := printf "%s" .Values.namespace }}
+
+{{- $port :=  .Values.ingress.port }}
+
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: {{ $namespace }}
+  name: {{ $app }}
+  labels:
+    app: {{ $app }}
+spec:
+  ports:
+    - port: {{ $port }}
+      targetPort: {{ $port }}
+      name: {{ $containerName }}
+{{ end }}
+
+{{- /* Define empty port */}}
+{{- $emptyPort = add1 $port }}
+
+    - port: {{ $emptyPort }}
+      targetPort: {{ $emptyPort }}
+      name: empty
+  selector:
+    app: {{ $app }}

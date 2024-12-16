@@ -1,0 +1,86 @@
+{{- $app := printf "%s" .Values.name }}
+{{- $namespace := printf "%s" .Values.namespace }}
+
+{{- $registry := .Values.image.registry }}
+{{- $repository := .Values.image.repository }}
+{{- $tag := .Values.image.tag }}
+{{- $command := .Values.image.command }}
+
+{{- $memoryRequest := .Values.resources.requests.memory | default "" }}
+{{- $memoryLimit := .Values.resources.limits.memory | default "" }}
+{{- $cpuRequest := .Values.resources.requests.cpu | default "" }}
+{{- $cpuLimit := .Values.resources.limits.cpu | default "" }}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $app }}
+  namespace: {{ $namespace }}
+  labels:
+    app: {{ $app }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ $app }}
+  template:
+    metadata:
+      labels:
+        app: {{ $app }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ $app }}
+          image: "{{ $registry }}/{{ $repository }}:{{ $tag }}"
+{{- if contains "latest" (printf "%s" $tag) }}
+          imagePullPolicy: Always
+{{- end }}
+          resources:
+            requests:
+{{ if $memoryRequest }}
+              memory: {{ $memoryRequest | quote }}
+{{ end }}
+{{ if $cpuRequest }}
+              cpu: {{ $cpuRequest | quote }}
+{{ end }}
+            limits:
+{{ if $memoryLimit }}
+              memory: {{ $memoryLimit | quote }}
+{{ end }}
+{{ if $cpuLimit }}
+              cpu: {{ $cpuLimit | quote }}
+{{ end }}
+          envFrom:
+            - configMapRef:
+                name: {{ $app }}-config
+{{- range $secretIndex, $secret := .Values.secrets }}
+            - secretRef:
+                name: {{ $secret }}
+{{ end }}
+          ports:
+            - containerPort: {{ $port }}
+          livenessProbe:
+            httpGet:
+              path: {{ default .Values.k8sProbes.liveness.path .Values.healthCheck.path }}
+              port: {{ $port }}
+            timeoutSeconds: {{ .Values.k8sProbes.liveness.timeoutSeconds }}
+            periodSeconds: {{ .Values.k8sProbes.liveness.periodSeconds }}
+            successThreshold: {{ .Values.k8sProbes.liveness.successThreshold }}
+            failureThreshold: {{ .Values.k8sProbes.liveness.failureThreshold }}
+          readinessProbe:
+            httpGet:
+              path: {{ default .Values.k8sProbes.readiness.path .Values.healthCheck.path }}
+              port: {{ $port }}
+            timeoutSeconds: {{ .Values.k8sProbes.readiness.timeoutSeconds }}
+            periodSeconds: {{ .Values.k8sProbes.readiness.periodSeconds }}
+            successThreshold: {{ .Values.k8sProbes.readiness.successThreshold }}
+            failureThreshold: {{ .Values.k8sProbes.readiness.failureThreshold }}
+          startupProbe:
+            httpGet:
+              path: {{ default .Values.k8sProbes.startup.path .Values.healthCheck.path }}
+              port: {{ $port }}
+            initialDelaySeconds: {{ .Values.k8sProbes.startup.initialDelaySeconds }}
+            timeoutSeconds: {{ .Values.k8sProbes.startup.timeoutSeconds }}
+            periodSeconds: {{ .Values.k8sProbes.startup.periodSeconds }}
+            successThreshold: {{ .Values.k8sProbes.startup.successThreshold }}
+            failureThreshold: {{ .Values.k8sProbes.startup.failureThreshold }}
