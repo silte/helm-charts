@@ -10,4 +10,14 @@ entries:
     urls:
     - nodejs-0.1.0.tgz
     version: 0.1.0
-generated: "2024-12-16T07:22:06.305636532Z"
+  nodejs-multi-container:
+  - apiVersion: v2
+    appVersion: "1.0"
+    created: "2024-12-16T07:23:25.890145257Z"
+    description: A Helm chart for Node.js applications with multiple containers
+    digest: 0e6030d097aa458e551c69400d449ec0df681415ac95597012a3ba9660c67c05
+    name: nodejs-multi-container
+    urls:
+    - nodejs-multi-container-0.1.0.tgz
+    version: 0.1.0
+generated: "2024-12-16T07:23:25.890183829Z"
