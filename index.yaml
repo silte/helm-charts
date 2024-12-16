@@ -1,0 +1,13 @@
+apiVersion: v1
+entries:
+  nodejs:
+  - apiVersion: v2
+    appVersion: "1.0"
+    created: "2024-12-16T07:22:06.305631543Z"
+    description: A Helm chart for Node.js applications
+    digest: 4d4a5c411d5ccd3010053ffecb0a613ad1bcd3474379af8f883895f0f780d849
+    name: nodejs
+    urls:
+    - nodejs-0.1.0.tgz
+    version: 0.1.0
+generated: "2024-12-16T07:22:06.305636532Z"
