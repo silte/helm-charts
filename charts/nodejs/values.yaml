@@ -6,7 +6,7 @@ image:
   registry: ghcr.io/silte
   # repository: change-me
   tag: latest
-  # command: Override default defined by container
+  # command: Override default defined by image
 
 ingress:
   enabled: true
@@ -34,7 +34,7 @@ healthCheck:
 # Read more about probes at https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
 k8sProbes:
   liveness:
-    # Defaults to `$container.healthCheck.path`
+    # Defaults to `healthCheck.path`
     # path: /api/health/live
     timeoutSeconds: 4
     periodSeconds: 5
@@ -42,7 +42,7 @@ k8sProbes:
     failureThreshold: 5
 
   readiness:
-    # Defaults to `$container.healthCheck.path`
+    # Defaults to `healthCheck.path`
     # path: /api/health/ready
     timeoutSeconds: 4
     periodSeconds: 5
@@ -50,7 +50,7 @@ k8sProbes:
     failureThreshold: 2
 
   startup:
-    # Defaults to `$container.healthCheck.path`
+    # Defaults to `healthCheck.path`
     # path: /api/health/started
     initialDelaySeconds: 2
     timeoutSeconds: 4
@@ -71,5 +71,5 @@ resources:
 # Custom app related variables
 env: {}
 
-# List of secrets names to be mapped to all containers
+# List of secrets names to be mapped to all application
 secrets: []

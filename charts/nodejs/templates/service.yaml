@@ -14,7 +14,7 @@ spec:
   ports:
     - port: {{ $port }}
       targetPort: {{ $port }}
-      name: {{ $containerName }}
+      name: {{ $app }}
 {{ end }}
 
 {{- /* Define empty port */}}

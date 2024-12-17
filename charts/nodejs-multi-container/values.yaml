@@ -6,7 +6,7 @@ image:
   registry: ghcr.io/silte
   # repository: change-me
   tag: latest
-  # command: Override default defined by container
+  # command: Override default defined by image
 
 ingress:
   enabled: true

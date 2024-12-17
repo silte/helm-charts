@@ -38,52 +38,29 @@
 {{- $app := printf "%s" .Values.name }}
 {{- $namespace := printf "%s" .Values.namespace }}
 
-{{- $defaultPort := printf "%s" .Values.ingress.port }}
-{{- $defaultNodeEnv := printf "%s" .Values.nodeEnv }}
-{{- $defaultCloudEnv := printf "%s" .Values.cloudEnv }}
-{{- $defaultLogLevel := printf "%s" .Values.logLevel }}
-{{- $defaultNoColor := printf "%s" .Values.noColor }}
+{{- $port := printf "%s" .Values.ingress.port }}
+{{- $nodeEnv := printf "%s" .Values.nodeEnv }}
+{{- $cloudEnv := printf "%s" .Values.cloudEnv }}
+{{- $logLevel := printf "%s" .Values.logLevel }}
+{{- $noColor := printf "%s" .Values.noColor }}
 
-
-
-{{- /* Shared env for all containers */}}
 
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ $app }}-config
-  namespace: {{ $app }}
-  labels:
-    app: {{ $app }}
-data:
-{{- range $key, $value := .Values.env }}
-  {{- include "nestedCaseConvertor" (dict "parentKey" $key "value" $value) -}}
-{{- end }}
-
----
-
-{{- /* Container specific env */}}
-{{- range $index, $container := .Values.containers }}
-{{- $containerName := printf "%s" $container.name }}
-
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ $app }}-config-{{ $containerName }}
   namespace: {{ $namespace }}
   labels:
     app: {{ $app }}
-    container: {{ $containerName }}
 data:
-  NODE_ENV: {{ default $defaultNodeEnv $container.nodeEnv | quote }}
-  CLOUD_ENV: {{ default $defaultCloudEnv $container.cloudEnv | quote }}
-  PORT: {{ default $defaultPort $container.ingress.port | quote }}
-  LOG_LEVEL: {{ default $defaultLogLevel $container.logLevel | quote }}
-  NO_COLOR: {{ default $defaultNoColor $container.noColor | quote }}
+  NODE_ENV: {{ $nodeEnv | quote }}
+  CLOUD_ENV: {{ $cloudEnv | quote }}
+  PORT: {{ $port | quote }}
+  LOG_LEVEL: {{ $logLevel | quote }}
+  NO_COLOR: {{ $noColor | quote }}
 
 {{ "  \n" }}
-{{- range $key, $value := $container.env }}
+
+{{- range $key, $value := .Values.env }}
   {{- include "nestedCaseConvertor" (dict "parentKey" $key "value" $value) -}}
-{{- end }}
----
 {{- end }}
