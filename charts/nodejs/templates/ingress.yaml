@@ -18,9 +18,9 @@ metadata:
   name: {{ $app }}
   namespace: {{ $namespace }}
   annotations:
-    kubernetes.io/ingress.class: traefik
     traefik.ingress.kubernetes.io/redirect-entry-point: https
 spec:
+  ingressClassName: traefik
   rules:
 {{- range $index, $path := $paths }}
     - host: {{ $host }}
@@ -36,7 +36,7 @@ spec:
 {{ end }}
 
 {{- /* Define empty port */}}
-{{- $emptyPort = add1 $port }}
+{{- $emptyPort := add $port 1 }}
 
 {{- range $index, $path := .Values.ingress.blockedPaths }}
     - host: {{ $host }}

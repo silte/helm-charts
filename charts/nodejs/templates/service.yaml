@@ -15,10 +15,9 @@ spec:
     - port: {{ $port }}
       targetPort: {{ $port }}
       name: {{ $app }}
-{{ end }}
 
 {{- /* Define empty port */}}
-{{- $emptyPort = add1 $port }}
+{{- $emptyPort := add $port 1 }}
 
     - port: {{ $emptyPort }}
       targetPort: {{ $emptyPort }}

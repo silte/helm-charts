@@ -30,7 +30,7 @@ spec:
   {{- if not (has $emptyPort $allPorts) }}
     {{- $portFound = true }}
   {{- else }}
-    {{- $emptyPort = add1 $emptyPort }}
+    {{- $emptyPort = add $emptyPort 1 }}
   {{- end }}
 {{- end }}
 

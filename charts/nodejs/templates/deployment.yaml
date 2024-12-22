@@ -11,6 +11,8 @@
 {{- $cpuRequest := .Values.resources.requests.cpu | default "" }}
 {{- $cpuLimit := .Values.resources.limits.cpu | default "" }}
 
+{{- $port := .Values.ingress.port }}
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
