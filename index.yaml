@@ -3,6 +3,15 @@ entries:
   nodejs:
   - apiVersion: v2
     appVersion: "1.0"
+    created: "2024-12-22T13:46:46.107028739Z"
+    description: A Helm chart for Node.js applications
+    digest: 8e332e58468d79afd8709075d5b054cbcf871ee32b0e2a783023a2b29b7e50be
+    name: nodejs
+    urls:
+    - nodejs-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: "1.0"
     created: "2024-12-16T07:22:06.305631543Z"
     description: A Helm chart for Node.js applications
     digest: 4d4a5c411d5ccd3010053ffecb0a613ad1bcd3474379af8f883895f0f780d849
@@ -11,6 +20,15 @@ entries:
     - nodejs-0.1.0.tgz
     version: 0.1.0
   nodejs-multi-container:
+  - apiVersion: v2
+    appVersion: "1.0"
+    created: "2024-12-22T13:46:46.319770489Z"
+    description: A Helm chart for Node.js applications with multiple containers
+    digest: b0c46c7e562a53ddd36ea455b5e7d81525f7c9d9aa231c43909e294abe847bfe
+    name: nodejs-multi-container
+    urls:
+    - nodejs-multi-container-0.1.3.tgz
+    version: 0.1.3
   - apiVersion: v2
     appVersion: "1.0"
     created: "2024-12-17T17:52:44.131225651Z"
@@ -29,4 +47,4 @@ entries:
     urls:
     - nodejs-multi-container-0.1.0.tgz
     version: 0.1.0
-generated: "2024-12-17T17:52:44.131239156Z"
+generated: "2024-12-22T13:46:46.319784355Z"
