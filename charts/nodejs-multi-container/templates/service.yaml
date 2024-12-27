@@ -1,6 +1,8 @@
 {{- $app := printf "%s" .Values.name }}
 {{- $namespace := printf "%s" .Values.namespace }}
 
+{{- $defaultPort := .Values.ingress.port }}
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -15,9 +17,9 @@ spec:
 {{- $containerName := printf "%s" $container.name }}
 
 {{- $ingress := $container.ingress | default (dict) }}
-{{- $port :=  $ingress.port | default .Values.ingress.port }}
+{{- $port :=  $ingress.port | default $defaultPort }}
 
-{{- if gt $port $highestPort }}
+{{- if gt (int $port) (int $highestPort) }}
   {{- $highestPort = $port }}
 {{- end }}
 

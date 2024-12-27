@@ -8,6 +8,9 @@
 
 {{- $defaultPort := .Values.ingress.port }}
 
+{{- $sharedSecret := .Values.secrets }}
+{{- $sharedK8sProbes := .Values.k8sProbes }}
+
 
 apiVersion: apps/v1
 kind: Deployment
@@ -79,7 +82,7 @@ spec:
                 name: {{ $app }}-config
             - configMapRef:
                 name: {{ $app }}-config-{{ $containerName }}
-{{- range $secretIndex, $secret := .Values.secrets }}
+{{- range $secretIndex, $secret := $sharedSecret }}
             - secretRef:
                 name: {{ $secret }}
 {{ end }}
@@ -93,25 +96,25 @@ spec:
             httpGet:
               path: {{ default $liveness.path $healthCheck.path }}
               port: {{ $port }}
-            timeoutSeconds: {{ default $liveness.timeoutSeconds .Values.k8sProbes.liveness.timeoutSeconds }}
-            periodSeconds: {{ default $liveness.periodSeconds .Values.k8sProbes.liveness.periodSeconds }}
-            successThreshold: {{ default $liveness.successThreshold .Values.k8sProbes.liveness.successThreshold }}
-            failureThreshold: {{ default $liveness.failureThreshold .Values.k8sProbes.liveness.failureThreshold }}
+            timeoutSeconds: {{ default $liveness.timeoutSeconds $sharedK8sProbes.liveness.timeoutSeconds }}
+            periodSeconds: {{ default $liveness.periodSeconds $sharedK8sProbes.liveness.periodSeconds }}
+            successThreshold: {{ default $liveness.successThreshold $sharedK8sProbes.liveness.successThreshold }}
+            failureThreshold: {{ default $liveness.failureThreshold $sharedK8sProbes.liveness.failureThreshold }}
           readinessProbe:
             httpGet:
               path: {{ default $readiness.path $healthCheck.path }}
               port: {{ $port }}
-            timeoutSeconds: {{ default $readiness.timeoutSeconds .Values.k8sProbes.readiness.timeoutSeconds }}
-            periodSeconds: {{ default $readiness.periodSeconds .Values.k8sProbes.readiness.periodSeconds }}
-            successThreshold: {{ default $readiness.successThreshold .Values.k8sProbes.readiness.successThreshold }}
-            failureThreshold: {{ default $readiness.failureThreshold .Values.k8sProbes.readiness.failureThreshold }}
+            timeoutSeconds: {{ default $readiness.timeoutSeconds $sharedK8sProbes.readiness.timeoutSeconds }}
+            periodSeconds: {{ default $readiness.periodSeconds $sharedK8sProbes.readiness.periodSeconds }}
+            successThreshold: {{ default $readiness.successThreshold $sharedK8sProbes.readiness.successThreshold }}
+            failureThreshold: {{ default $readiness.failureThreshold $sharedK8sProbes.readiness.failureThreshold }}
           startupProbe:
             httpGet:
               path: {{ default $startup.path $healthCheck.path }}
               port: {{ $port }}
-            initialDelaySeconds: {{ default $startup.initialDelaySeconds .Values.k8sProbes.startup.initialDelaySeconds }}
-            timeoutSeconds: {{ default $startup.timeoutSeconds .Values.k8sProbes.startup.timeoutSeconds }}
-            periodSeconds: {{ default $startup.periodSeconds .Values.k8sProbes.startup.periodSeconds }}
-            successThreshold: {{ default $startup.successThreshold .Values.k8sProbes.startup.successThreshold }}
-            failureThreshold: {{ default $startup.failureThreshold .Values.k8sProbes.startup.failureThreshold }}
+            initialDelaySeconds: {{ default $startup.initialDelaySeconds $sharedK8sProbes.startup.initialDelaySeconds }}
+            timeoutSeconds: {{ default $startup.timeoutSeconds $sharedK8sProbes.startup.timeoutSeconds }}
+            periodSeconds: {{ default $startup.periodSeconds $sharedK8sProbes.startup.periodSeconds }}
+            successThreshold: {{ default $startup.successThreshold $sharedK8sProbes.startup.successThreshold }}
+            failureThreshold: {{ default $startup.failureThreshold $sharedK8sProbes.startup.failureThreshold }}
 {{ end }}

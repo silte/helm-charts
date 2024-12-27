@@ -4,6 +4,9 @@
 {{- $namespace := printf "%s" .Values.namespace }}
 {{- $host :=  .Values.ingress.host }}
 
+{{- $defaultPort := .Values.ingress.port }}
+{{- $defaultPath := .Values.ingress.path }}
+
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -17,8 +20,9 @@ spec:
 
 {{- $highestPort := 0 }}
 {{- range $index, $container := .Values.containers }}
-  {{- $port := $container.ingress.port | default .Values.ingress.port }}
-  {{- if gt $port $highestPort }}
+  {{- $ingress := $container.ingress | default (dict) }}
+  {{- $port := $ingress.port | default $defaultPort }}
+  {{- if gt (int $port) (int $highestPort) }}
     {{- $highestPort = $port }}
   {{- end }}
 {{- end }}
@@ -43,8 +47,8 @@ spec:
 {{- $containerName := printf "%s" $container.name }}
 
 {{- $ingress := $container.ingress | default (dict) }}
-{{- $paths :=  $ingress.path | default .Values.ingress.path }}
-{{- $port :=  $ingress.port | default .Values.ingress.port }}
+{{- $paths :=  $ingress.path | default $defaultPath }}
+{{- $port :=  $ingress.port | default $defaultPort }}
 
 
 {{- /* Normalize paths to be array of strings */}}
