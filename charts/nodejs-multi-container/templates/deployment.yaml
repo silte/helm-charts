@@ -62,6 +62,9 @@ spec:
 {{- if contains "latest" (printf "%s" $tag) }}
           imagePullPolicy: Always
 {{- end }}
+{{- if $command }}
+          command: {{ $command }}
+{{- end }}
           resources:
             requests:
 {{ if $memoryRequest }}
