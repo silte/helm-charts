@@ -10,28 +10,24 @@ metadata:
     app: {{ $app }}
 spec:
   ports:
-{{- $allPorts := list }}
+{{- $highestPort := 0 }}
 {{- range $index, $container := .Values.containers }}
 {{- $containerName := printf "%s" $container.name }}
 
 {{- $ingress := $container.ingress | default (dict) }}
 {{- $port :=  $ingress.port | default .Values.ingress.port }}
-{{- $allPorts = append $allPorts $port }}
+
+{{- if gt $port $highestPort }}
+  {{- $highestPort = $port }}
+{{- end }}
 
     - port: {{ $port }}
       targetPort: {{ $port }}
       name: {{ $containerName }}
 {{ end }}
 
-{{- /* Find an empty port that is not in the list */}}
-{{- $emptyPort := 30000 }}
-{{- range $i, $p := until 1000 }}
-  {{- if not (has $emptyPort $allPorts) }}
-    {{- break }}
-  {{- else }}
-    {{- $emptyPort = add $emptyPort 1 }}
-  {{- end }}
-{{- end }}
+
+{{- $emptyPort := add $highestPort 1 }}
 
     - port: {{ $emptyPort }}
       targetPort: {{ $emptyPort }}

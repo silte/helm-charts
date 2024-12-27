@@ -15,20 +15,15 @@ spec:
   ingressClassName: traefik
   rules:
 
-{{- $allPorts := list }}
+{{- $highestPort := 0 }}
 {{- range $index, $container := .Values.containers }}
-{{- $allPorts = append $allPorts $port }}
-{{- end }}
-
-{{- /* Find an empty port that is not in the list */}}
-{{- $emptyPort := 30000 }}
-{{- range $i, $p := until 1000 }}
-  {{- if not (has $emptyPort $allPorts) }}
-    {{- break }}
-  {{- else }}
-    {{- $emptyPort = add $emptyPort 1 }}
+  {{- $port := $container.ingress.port | default .Values.ingress.port }}
+  {{- if gt $port $highestPort }}
+    {{- $highestPort = $port }}
   {{- end }}
 {{- end }}
+
+{{- $emptyPort := add $highestPort 1 }}
 
 {{- range $index, $path := .Values.ingress.blockedPaths }}
     - host: {{ $host }}
