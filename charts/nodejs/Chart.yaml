@@ -2,4 +2,4 @@ apiVersion: v2
 appVersion: "1.0"
 description: A Helm chart for Node.js applications
 name: nodejs
-version: 0.1.4
+version: 1.0.0
