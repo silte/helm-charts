@@ -22,19 +22,6 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-{{- range $index, $path := $paths }}
-    - host: {{ $host }}
-      http:
-        paths:
-          - path: {{ $path }}
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ $app }}
-                port:
-                  number: {{ $port }}
-{{ end }}
-
 {{- /* Define empty port */}}
 {{- $emptyPort := add $port 1 }}
 
@@ -49,5 +36,18 @@ spec:
                 name: {{ $app }}
                 port:
                   number: {{ $emptyPort }}
-{{ end }}
+{{- end }}
+
+{{- range $index, $path := $paths }}
+    - host: {{ $host }}
+      http:
+        paths:
+          - path: {{ $path }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $app }}
+                port:
+                  number: {{ $port }}
+{{- end }}
 {{- end }}

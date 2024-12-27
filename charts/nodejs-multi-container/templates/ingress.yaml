@@ -17,33 +17,8 @@ spec:
 
 {{- $allPorts := list }}
 {{- range $index, $container := .Values.containers }}
-{{- $containerName := printf "%s" $container.name }}
-
-{{- $ingress := $container.ingress | default (dict) }}
-{{- $paths :=  $ingress.path | default .Values.ingress.path }}
-{{- $port :=  $ingress.port | default .Values.ingress.port }}
-
 {{- $allPorts = append $allPorts $port }}
-
-{{- /* Normalize paths to be array of strings */}}
-{{- if kindIs "string" $paths }}
-  {{- $paths = list $paths -}}
-{{- end}}
-
-{{- range $pathIndex, $path := $paths }}
-    - host: {{ $host }}
-      http:
-        paths:
-          - path: {{ $path }}
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ $app }}
-                port:
-                  number: {{ $port }}
-{{ end }}
-{{ end }}
-
+{{- end }}
 {{- /* Find an empty port that is not in the list */}}
 {{- $emptyPort := 30000 }}
 {{- $portFound := false }}
@@ -66,5 +41,33 @@ spec:
                 name: {{ $app }}
                 port:
                   number: {{ $emptyPort }}
-{{ end }}
+{{- end }}
+
+
+{{- range $index, $container := .Values.containers }}
+{{- $containerName := printf "%s" $container.name }}
+
+{{- $ingress := $container.ingress | default (dict) }}
+{{- $paths :=  $ingress.path | default .Values.ingress.path }}
+{{- $port :=  $ingress.port | default .Values.ingress.port }}
+
+
+{{- /* Normalize paths to be array of strings */}}
+{{- if kindIs "string" $paths }}
+  {{- $paths = list $paths -}}
+{{- end}}
+
+{{- range $pathIndex, $path := $paths }}
+    - host: {{ $host }}
+      http:
+        paths:
+          - path: {{ $path }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $app }}
+                port:
+                  number: {{ $port }}
+{{- end }}
+{{- end }}
 {{- end }}
