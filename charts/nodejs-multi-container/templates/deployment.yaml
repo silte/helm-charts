@@ -63,7 +63,7 @@ spec:
           imagePullPolicy: Always
 {{- end }}
 {{- if $command }}
-          command: {{ $command }}
+          command: {{- toYaml $command | nindent 12 }}
 {{- end }}
           resources:
             requests:
