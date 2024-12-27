@@ -3,6 +3,15 @@ entries:
   nodejs:
   - apiVersion: v2
     appVersion: "1.0"
+    created: "2024-12-27T05:49:22.823706961Z"
+    description: A Helm chart for Node.js applications
+    digest: af4d27cc3742432deccf00a4d2230b993ef70eae0518bbbca277537814e0fc2b
+    name: nodejs
+    urls:
+    - nodejs-0.1.4.tgz
+    version: 0.1.4
+  - apiVersion: v2
+    appVersion: "1.0"
     created: "2024-12-22T13:47:09.315359876Z"
     description: A Helm chart for Node.js applications
     digest: 9d864083e4d7dd3e992fb605dbb325b73b103e795b0e120d2f9ce29eddbce2b5
@@ -65,4 +74,4 @@ entries:
     urls:
     - nodejs-multi-container-0.1.0.tgz
     version: 0.1.0
-generated: "2024-12-27T05:48:43.95494326Z"
+generated: "2024-12-27T05:49:22.823726809Z"
