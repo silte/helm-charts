@@ -25,10 +25,9 @@ spec:
 
 {{- /* Find an empty port that is not in the list */}}
 {{- $emptyPort := 30000 }}
-{{- $portFound := false }}
-{{- while (not $portFound) }}
+{{- range $i, $p := until 1000 }}
   {{- if not (has $emptyPort $allPorts) }}
-    {{- $portFound = true }}
+    {{- break }}
   {{- else }}
     {{- $emptyPort = add $emptyPort 1 }}
   {{- end }}
