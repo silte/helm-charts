@@ -6,6 +6,8 @@
 {{- $defaultTag := .Values.image.tag }}
 {{- $defaultCommand := .Values.image.command }}
 
+{{- $defaultPort := .Values.ingress.port }}
+
 
 apiVersion: apps/v1
 kind: Deployment
@@ -34,6 +36,9 @@ spec:
 {{- $repository := $image.repository | default $defaultRepository }}
 {{- $tag := $image.tag | default $defaultTag }}
 {{- $command := $image.command | default $defaultCommand }}
+
+{{- $ingress := $container.ingress | default (dict) }}
+{{- $port := $ingress.port | default $defaultPort }}
 
 {{- $resources := $container.resources | default (dict) }}
 {{- $requests := $resources.requests | default (dict) }}
