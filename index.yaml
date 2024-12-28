@@ -76,6 +76,15 @@ entries:
   nodejs-multi-container:
   - apiVersion: v2
     appVersion: "1.0"
+    created: "2024-12-28T19:24:10.702874407Z"
+    description: A Helm chart for Node.js applications with multiple containers
+    digest: f832a0e2f81a50c779f07f651d9daf175235631fd66396da976d97b55f5f0c5a
+    name: nodejs-multi-container
+    urls:
+    - nodejs-multi-container-1.0.3.tgz
+    version: 1.0.3
+  - apiVersion: v2
+    appVersion: "1.0"
     created: "2024-12-27T14:03:24.380209783Z"
     description: A Helm chart for Node.js applications with multiple containers
     digest: 55ecce20e751689adb875c94d8c68910d89218ad997d56bc5d5c0ae6ac26a866
@@ -173,4 +182,4 @@ entries:
     urls:
     - nodejs-multi-container-0.1.0.tgz
     version: 0.1.0
-generated: "2024-12-28T19:23:17.654102836Z"
+generated: "2024-12-28T19:24:10.70294547Z"
