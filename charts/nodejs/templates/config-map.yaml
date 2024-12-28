@@ -38,11 +38,11 @@
 {{- $app := printf "%s" .Values.name }}
 {{- $namespace := printf "%s" .Values.namespace }}
 
-{{- $port := printf "%s" .Values.ingress.port }}
+{{- $port := .Values.ingress.port }}
 {{- $nodeEnv := printf "%s" .Values.nodeEnv }}
 {{- $cloudEnv := printf "%s" .Values.cloudEnv }}
 {{- $logLevel := printf "%s" .Values.logLevel }}
-{{- $noColor := printf "%s" .Values.noColor }}
+{{- $noColor := .Values.noColor }}
 
 
 apiVersion: v1
