@@ -5,10 +5,13 @@
 
 {{- $host :=  .Values.ingress.host }}
 {{- $port :=  .Values.ingress.port }}
-{{- $paths := .Values.ingress.path }}
+{{- $paths := coalesce .Values.ingress.path "/" }}
 
 {{- /* Normalize paths to be array of strings */}}
 {{- if kindIs "string" $paths }}
+  {{- $paths = list $paths -}}
+{{- end}}
+{{- if not (kindIs "slice" $paths) }}
   {{- $paths = list $paths -}}
 {{- end}}
 
