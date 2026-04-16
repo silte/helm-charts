@@ -15,6 +15,12 @@ ingress:
   # path: change-me
   blockedPaths: []
   port: 3000
+  basicAuth:
+    enabled: false
+    # Secret in the same namespace as this release.
+    # Must contain htpasswd users in key `users`.
+    # Example: `kubectl create secret generic my-basic-auth --from-file=users=./users`
+    secretName: ""
 
 # Node environment for the process.
 nodeEnv: production
