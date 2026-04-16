@@ -19,6 +19,10 @@ metadata:
   namespace: {{ $namespace }}
   annotations:
     traefik.ingress.kubernetes.io/redirect-entry-point: https
+{{- if and .Values.ingress.basicAuth.enabled .Values.ingress.basicAuth.secretName }}
+    traefik.ingress.kubernetes.io/auth-type: basic
+    traefik.ingress.kubernetes.io/auth-secret: {{ .Values.ingress.basicAuth.secretName }}
+{{- end }}
 spec:
   ingressClassName: traefik
   rules:
