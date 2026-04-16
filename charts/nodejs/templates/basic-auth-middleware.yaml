@@ -1,0 +1,15 @@
+{{- if and .Values.ingress.enabled .Values.ingress.basicAuth.enabled .Values.ingress.basicAuth.secretName }}
+
+{{- $app := printf "%s" .Values.name }}
+{{- $namespace := printf "%s" .Values.namespace }}
+
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ printf "%s-basic-auth" $app }}
+  namespace: {{ $namespace }}
+spec:
+  basicAuth:
+    secret: {{ .Values.ingress.basicAuth.secretName }}
+
+{{- end }}
