@@ -15,8 +15,7 @@ metadata:
   annotations:
     traefik.ingress.kubernetes.io/redirect-entry-point: https
 {{- if and .Values.ingress.basicAuth.enabled .Values.ingress.basicAuth.secretName }}
-    traefik.ingress.kubernetes.io/auth-type: basic
-    traefik.ingress.kubernetes.io/auth-secret: {{ .Values.ingress.basicAuth.secretName }}
+    traefik.ingress.kubernetes.io/router.middlewares: {{ printf "%s-%s-basic-auth@kubernetescrd" $namespace $app }}
 {{- end }}
 spec:
   ingressClassName: traefik
